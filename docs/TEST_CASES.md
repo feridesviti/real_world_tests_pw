@@ -1,0 +1,43 @@
+# Test cases — RealWorld (Conduit)
+
+App: https://demo.realworld.show. Priority scale: Critical > High > Medium > Low.
+Status of each case is not stored here: cases marked **[auto]** exist in `tests/`, the rest are manual and not yet run.
+
+## 1. Login
+
+| ID     | Title                                   | Steps                                                                            | Expected Result                                                                         | Priority |
+| ------ | --------------------------------------- | -------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- | -------- |
+| TC-001 | [auto] Login with valid data            | 1. Open /login 2. Enter registered email and password 3. Click Sign in           | User is logged in, home page opens, profile link is in the header                       | Critical |
+| TC-002 | [auto] Login with wrong password        | 1. Open /login 2. Enter registered email and a wrong password 3. Click Sign in   | Error message is shown, user stays on the login page                                    | High     |
+| TC-003 | Login with unknown email                | 1. Open /login 2. Enter an email that is not registered 3. Click Sign in         | Error message is shown, no login                                                        | High     |
+| TC-004 | Login with empty fields                 | 1. Open /login 2. Leave both fields empty 3. Click Sign in                       | Error message about empty fields, no login                                              | High     |
+| TC-005 | Login with empty password only          | 1. Enter valid email 2. Leave password empty 3. Click Sign in                    | Error message, no login                                                                 | Medium   |
+| TC-006 | Email in different letter case          | 1. Enter registered email in UPPER case 2. Enter valid password 3. Click Sign in | Behavior is noted and compared with the requirements (login works or an error is shown) | Low      |
+| TC-007 | Email with spaces around                | 1. Enter " email@test.com " with spaces 2. Enter valid password 3. Click Sign in | Behavior is noted (spaces trimmed or error)                                             | Low      |
+| TC-008 | Very long email (300+ characters)       | 1. Enter a 300-character email 2. Enter any password 3. Click Sign in            | Error message, page does not crash                                                      | Low      |
+| TC-009 | Special characters and Unicode in email | 1. Enter `тест@пошта.укр` 2. Enter any password 3. Click Sign in                 | Error message, page does not crash                                                      | Low      |
+| TC-010 | SQL-like text in password               | 1. Enter valid email 2. Enter `' OR '1'='1` as password 3. Click Sign in         | Login fails with the normal error message                                               | High     |
+| TC-011 | [auto] "Need an account?" link          | 1. Open /login 2. Click "Need an account?"                                       | Registration page opens                                                                 | Low      |
+
+## 2. Settings
+
+| ID     | Title                                      | Steps                                                                                                 | Expected Result                                                                                | Priority |
+| ------ | ------------------------------------------ | ----------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- | -------- |
+| TC-020 | [auto] Settings page opens                 | 1. Log in 2. Open /settings                                                                           | Title "Your Settings" is shown, URL is /settings                                               | High     |
+| TC-021 | [auto] Settings form shows current data    | 1. Log in 2. Open /settings                                                                           | Username and email show current values, password field is empty, Update and Logout are visible | High     |
+| TC-022 | [auto] Update picture, name, bio and email | 1. Open /settings 2. Change all four fields 3. Click Update Settings                                  | Profile page shows new data, settings form shows new email                                     | Critical |
+| TC-023 | [auto] Change password                     | 1. Open /settings 2. Enter new password 3. Click Update Settings 4. Log out                           | Old password is rejected (401), new password works                                             | Critical |
+| TC-024 | Update with no changes                     | 1. Open /settings 2. Click Update Settings without changes                                            | Settings are saved, nothing changes, no error                                                  | Medium   |
+| TC-025 | Username already taken                     | 1. Open /settings 2. Enter the username of another user 3. Click Update Settings                      | Error message, data is not changed                                                             | High     |
+| TC-026 | Email already taken                        | 1. Open /settings 2. Enter the email of another user 3. Click Update Settings                         | Error message, data is not changed                                                             | High     |
+| TC-027 | Empty username                             | 1. Clear Username 2. Click Update Settings                                                            | Error message, data is not changed                                                             | High     |
+| TC-028 | Empty email                                | 1. Clear Email 2. Click Update Settings                                                               | Error message, data is not changed                                                             | High     |
+| TC-029 | Invalid email format                       | 1. Enter `not-an-email` in Email 2. Click Update Settings                                             | Error message, data is not changed                                                             | High     |
+| TC-030 | Invalid picture URL                        | 1. Enter `abc` in picture URL 2. Click Update Settings                                                | Behavior is noted (error, or broken image on profile)                                          | Medium   |
+| TC-031 | Very long bio (5000 characters)            | 1. Paste 5000 characters in Bio 2. Click Update Settings                                              | Saved or clear error message, page does not crash                                              | Low      |
+| TC-032 | Very short password (1 character)          | 1. Enter 1 character in New Password 2. Click Update Settings                                         | Behavior is noted and compared with the requirements                                           | Medium   |
+| TC-033 | Unicode and emoji in username and bio      | 1. Enter `Світлана 😀` in Username and Bio 2. Click Update Settings                                   | Saved and shown correctly                                                                      | Low      |
+| TC-034 | HTML in bio                                | 1. Enter `<script>alert(1)</script>` in Bio 2. Click Update Settings 3. Open profile                  | Text is shown as plain text, no script runs                                                    | High     |
+| TC-035 | Settings page without login                | 1. Log out 2. Open /settings directly                                                                 | User is redirected or blocked, settings are not shown                                          | Critical |
+| TC-036 | Session after logout                       | 1. Click "Or click here to logout." 2. Press browser Back                                             | Settings are not shown, user stays logged out                                                  | High     |
+| TC-037 | Two tabs, two updates                      | 1. Open /settings in two tabs 2. Change the bio in tab 1 and save 3. Change the bio in tab 2 and save | Last save wins, no error                                                                       | Low      |
